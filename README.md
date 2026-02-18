@@ -22,7 +22,7 @@ Automate adding intro videos to your YouTube content and re-uploading to your ch
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/youtube_auto_intro.git
+   git clone https://github.com/koreric75/youtube_auto_intro.git
    cd youtube_auto_intro
    ```
 
