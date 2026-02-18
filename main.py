@@ -64,7 +64,14 @@ def main():
     """Main entry point for the YouTube automation script."""
     
     print("=" * 60)
-    print("YouTube Automation - Intro Stitcher & Uploader")
+    print("  _____ _ _       _____ _                            ")
+    print(" / ____| (_)     / ____| |                           ")
+    print("| |    | |_ _ __| (___ | |_ _ __ ___  __ _ _ __ ___   ")
+    print("| |    | | | '_ \\___ \\| __| '__/ _ \\/ _` | '_ ` _ \\  ")
+    print("| |____| | | |_) ____) | |_| | |  __/ (_| | | | | | | ")
+    print(" \\_____|_|_| .__/_____/ \\__|_|  \\___|\\__,_|_| |_| |_| ")
+    print("           | |                                        ")
+    print("           |_|    Intro Stitcher & Uploader           ")
     print("=" * 60 + "\n")
     
     # Ensure required directories exist

@@ -54,6 +54,8 @@ Thumbs.db
 *.mkv
 *.wmv
 *.webm
+!assets/*.png
+!assets/*.jpg
 
 # Output and test folders
 output/

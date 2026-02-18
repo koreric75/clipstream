@@ -3,8 +3,15 @@ requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "yt_automation"
-version = "0.1.0"
+name = "clipstream"
+version = "1.0.0"
+description = "Automate adding intro videos to YouTube content"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "Blue Falcon RC & Media"}
+]
+keywords = ["youtube", "video", "automation", "intro", "moviepy"]
 dependencies = [
     "moviepy",
     "yt-dlp",

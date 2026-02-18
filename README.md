@@ -1,6 +1,13 @@
-# YouTube Auto Intro
+<p align="center">
+  <img src="assets/logo.png" alt="ClipStream Logo" width="200">
+</p>
 
-Automate adding intro videos to your YouTube content and re-uploading to your channel.
+# ClipStream
+
+**Automate adding intro videos to your YouTube content and re-uploading to your channel.**
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 
 ## Features
 
@@ -22,8 +29,8 @@ Automate adding intro videos to your YouTube content and re-uploading to your ch
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/koreric75/youtube_auto_intro.git
-   cd youtube_auto_intro
+   git clone https://github.com/koreric75/clipstream.git
+   cd clipstream
    ```
 
 2. **Create virtual environment**
@@ -157,4 +164,12 @@ Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for gui
 
 ## Author
 
-Created for automating YouTube content workflows.
+Created by **Blue Falcon RC & Media** for automating YouTube content workflows.
+
+---
+
+<p align="center">
+  <img src="assets/logo.png" alt="ClipStream" width="100">
+  <br>
+  <strong>ClipStream</strong> - Streamline Your Content
+</p>

@@ -124,7 +124,7 @@ def process_batch(playlist_url, limit=6, privacy_status='private'):
         privacy_status: Privacy status for uploaded videos
     """
     print("=" * 60)
-    print("Batch Video Processor")
+    print("ClipStream - Batch Video Processor")
     print("=" * 60 + "\n")
     
     ensure_directories()

@@ -1,4 +1,4 @@
-# Contributing to YouTube Auto Intro
+# Contributing to ClipStream
 
 Thank you for your interest in contributing! This document provides guidelines for contributing to this project.
 
