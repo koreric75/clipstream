@@ -1,5 +1,6 @@
 # Virtual environments
 .venv/
+.venv-*/
 venv/
 env/
 ENV/
@@ -47,20 +48,39 @@ Thumbs.db
 *.bak
 *.log
 
-# Video files (user-specific content)
+# Video files (user-specific content — keep intro assets)
 *.mp4
 *.avi
 *.mov
 *.mkv
 *.wmv
 *.webm
+# Keep app intro files
+!intro.mp4
+!intro_short.mp4
+!assets/*.png
+!assets/*.jpg
+
+# Image files (keep app assets)
+*.jpg
+*.jpeg
+*.png
+!intro.jpg
+!intro_short.jpg
 !assets/*.png
 !assets/*.jpg
 
 # Output and test folders
 output/
 downloads/
+EditedVideos/
 batch_test/
+
+# Runtime data
+clipstream_history.json
+
+# Temporary MoviePy files
+*TEMP_MPY_wvf_snd*
 
 # Setup instructions (local reference only)
 folder setup instructions.ini

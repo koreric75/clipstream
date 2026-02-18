@@ -1,0 +1,29 @@
+# ClipStream Streamlit Configuration
+# Dark theme with logo-inspired colors
+
+[theme]
+# Primary dark charcoal (from logo background)
+base = "dark"
+
+# Coral red - action/highlight color (video platform feel)
+primaryColor = "#FF6B6B"
+
+# Dark charcoal background (from logo)
+backgroundColor = "#1F2023"
+
+# Slightly lighter for contrast
+secondaryBackgroundColor = "#27282D"
+
+# Light text for readability
+textColor = "#F5F5F5"
+
+# Clean font
+font = "sans serif"
+
+[server]
+# Enable file watching for development
+runOnSave = true
+
+[browser]
+# Gather usage stats (optional - can disable)
+gatherUsageStats = false

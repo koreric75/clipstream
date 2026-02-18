@@ -11,7 +11,8 @@ from dotenv import load_dotenv
 
 from yt_automation.auth import get_service
 from yt_automation.editor import stitch_intro
-from yt_automation.youtube_ops import list_videos, upload_video
+from yt_automation.youtube_ops import list_videos, upload_video, set_thumbnail
+from yt_automation.storage import check_storage_warning, cleanup_processed_videos, storage_status
 
 
 # Load environment variables
@@ -19,11 +20,13 @@ load_dotenv()
 
 # YouTube API scopes
 SCOPES = ['https://www.googleapis.com/auth/youtube.upload',
-          'https://www.googleapis.com/auth/youtube.readonly']
+          'https://www.googleapis.com/auth/youtube.readonly',
+          'https://www.googleapis.com/auth/youtube']
 
 # Paths
 CLIENT_SECRETS_FILE = os.getenv('CLIENT_SECRETS_FILE', 'client_secrets.json')
 INTRO_VIDEO = os.getenv('INTRO_VIDEO', 'intro.mp4')
+INTRO_THUMBNAIL = os.getenv('INTRO_THUMBNAIL', 'intro.jpg')
 OUTPUT_DIR = Path(os.getenv('OUTPUT_DIR', 'output'))
 
 
@@ -98,9 +101,13 @@ def main():
         print("1. Process a single video (add intro) - DISABLED: No intro video")
         print("2. Process and upload a video - DISABLED: No intro video")
     print("3. List your YouTube videos")
-    print("4. Exit")
+    print("4. Storage status & cleanup")
+    print("5. Exit")
     
-    choice = input("\nEnter your choice (1-4): ").strip()
+    # Check storage warning
+    check_storage_warning(OUTPUT_DIR)
+    
+    choice = input("\nEnter your choice (1-5): ").strip()
     
     if choice == '1':
         if not intro_available:
@@ -149,6 +156,17 @@ def main():
         print(f"\n✓ Video uploaded successfully!")
         print(f"Video ID: {video_id}")
         print(f"URL: https://www.youtube.com/watch?v={video_id}")
+        
+        # Set thumbnail if available
+        if os.path.exists(INTRO_THUMBNAIL):
+            print(f"Setting thumbnail from {INTRO_THUMBNAIL}...")
+            try:
+                set_thumbnail(youtube, video_id, INTRO_THUMBNAIL)
+                print(f"✓ Thumbnail set successfully!")
+            except Exception as e:
+                print(f"⚠️  Warning: Could not set thumbnail: {e}")
+        else:
+            print(f"⚠️  Note: Thumbnail file '{INTRO_THUMBNAIL}' not found. Skipping thumbnail update.")
     
     elif choice == '3':
         # List videos - no intro needed
@@ -169,6 +187,13 @@ def main():
             print("No videos found on your channel.")
     
     elif choice == '4':
+        # Storage status and cleanup
+        storage_status([OUTPUT_DIR])
+        cleanup_response = input("\nWould you like to clean up the output folder? (y/N): ").strip().lower()
+        if cleanup_response == 'y':
+            cleanup_processed_videos(OUTPUT_DIR, confirm=False)
+    
+    elif choice == '5':
         print("Goodbye!")
         sys.exit(0)
     

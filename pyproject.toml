@@ -17,5 +17,6 @@ dependencies = [
     "yt-dlp",
     "google-api-python-client",
     "google-auth-oauthlib",
-    "python-dotenv"
+    "python-dotenv",
+    "streamlit"
 ]

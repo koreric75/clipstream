@@ -13,16 +13,19 @@ from dotenv import load_dotenv
 
 from yt_automation.auth import get_service
 from yt_automation.editor import stitch_intro
-from yt_automation.youtube_ops import upload_video
+from yt_automation.youtube_ops import upload_video, set_thumbnail
+from yt_automation.storage import check_storage_warning, cleanup_processed_videos, storage_status
 
 # Load environment variables
 load_dotenv()
 
 # Configuration
 SCOPES = ['https://www.googleapis.com/auth/youtube.upload',
-          'https://www.googleapis.com/auth/youtube.readonly']
+          'https://www.googleapis.com/auth/youtube.readonly',
+          'https://www.googleapis.com/auth/youtube']
 CLIENT_SECRETS_FILE = os.getenv('CLIENT_SECRETS_FILE', 'client_secrets.json')
 INTRO_VIDEO = os.getenv('INTRO_VIDEO', 'intro.mp4')
+INTRO_THUMBNAIL = os.getenv('INTRO_THUMBNAIL', 'intro.jpg')
 DOWNLOAD_DIR = Path('downloads')
 OUTPUT_DIR = Path('output')
 
@@ -129,6 +132,9 @@ def process_batch(playlist_url, limit=6, privacy_status='private'):
     
     ensure_directories()
     
+    # Check storage status at start
+    storage_status([OUTPUT_DIR, DOWNLOAD_DIR])
+    
     # Check for intro video
     if not os.path.exists(INTRO_VIDEO):
         print(f"❌ Error: Intro video not found at '{INTRO_VIDEO}'")
@@ -206,6 +212,15 @@ def process_batch(playlist_url, limit=6, privacy_status='private'):
             print(f"✓ Uploaded successfully!")
             print(f"   New URL: {new_url}")
             
+            # Set thumbnail if available
+            if os.path.exists(INTRO_THUMBNAIL):
+                print(f"🖼️  Setting thumbnail...")
+                try:
+                    set_thumbnail(youtube, new_video_id, INTRO_THUMBNAIL)
+                    print(f"✓ Thumbnail set")
+                except Exception as thumb_error:
+                    print(f"⚠️  Warning: Could not set thumbnail: {thumb_error}")
+            
             results.append({
                 'video': video,
                 'status': 'success',
@@ -241,6 +256,16 @@ def process_batch(playlist_url, limit=6, privacy_status='private'):
             print(f"  - {r['video']['title'][:40]}... ({r['status']})")
             if 'error' in r:
                 print(f"    Error: {r['error']}")
+    
+    # Storage check and cleanup prompt
+    print("\n" + "=" * 60)
+    print("STORAGE MANAGEMENT")
+    print("=" * 60)
+    storage_status([OUTPUT_DIR, DOWNLOAD_DIR])
+    
+    cleanup_response = input("\nWould you like to clean up processed files? (y/N): ").strip().lower()
+    if cleanup_response == 'y':
+        cleanup_processed_videos(OUTPUT_DIR, DOWNLOAD_DIR, confirm=False)
     
     return results
 
