@@ -1,0 +1,14 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "yt_automation"
+version = "0.1.0"
+dependencies = [
+    "moviepy",
+    "yt-dlp",
+    "google-api-python-client",
+    "google-auth-oauthlib",
+    "python-dotenv"
+]
