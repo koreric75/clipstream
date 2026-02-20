@@ -2,94 +2,70 @@
 %% https://architect-ai-pro-mobile-edition-484078543321.us-west1.run.app/
 graph TD
     subgraph "BlueFalconInk LLC — Clipstream Architecture"
-        subgraph "User Interface"
-            User[End User]
-            CLI[Clipstream CLI]
+        subgraph "Application"
+            ClipstreamApp[Clipstream App - Python/Streamlit]
+            MainCLI[main.py - Interactive CLI]
+            BatchProcessor[batch_process.py - Batch Processor]
+            VideoEditor[yt_automation/editor.py - MoviePy]
+            YouTubeOps[yt_automation/youtube_ops.py - YouTube API Client]
+            AuthModule[yt_automation/auth.py - OAuth Flow]
+            StorageMgmt[yt_automation/storage.py - Local Storage Mgmt]
         end
 
-        subgraph "Application Logic"
-            style Application fill:#1E3A5F,color:#BFDBFE
-            MainScript[main.py]
-            BatchScript[batch_process.py]
-            
-            subgraph "Clipstream Core Logic"
-                AuthMod[Auth Module]
-                EditorMod[Editor Module]
-                YouTubeOpsMod[YouTube Ops Module]
-                StorageMod[Storage Module]
-            end
-
-            MainScript --> ClipstreamCoreLogic: "Calls core functions"
-            BatchScript --> ClipstreamCoreLogic: "Calls core functions"
-            ClipstreamCoreLogic --> AuthMod
-            ClipstreamCoreLogic --> EditorMod
-            ClipstreamCoreLogic --> YouTubeOpsMod
-            ClipstreamCoreLogic --> StorageMod
+        subgraph "Data"
+            LocalDownloads[Local File System - downloads/]
+            LocalOutput[Local File System - output/]
+            IntroMedia[Local File System - intro.mp4/jpg]
+            OAuthToken[Local File System - token.pickle]
+            ClientSecrets[Local File System - client_secrets.json]
         end
 
-        subgraph "Dependencies & Libraries"
-            MoviePyLib[MoviePy Library]
-            YTDLPLib[yt-dlp External Tool]
-            GoogleAPILib[Google API Python Client]
-        end
-
-        subgraph "Data Storage"
-            style Data fill:#0F172A,color:#BFDBFE
-            LocalFS[Local File System]
-            IntroMedia[Intro Video/Image]
-            ClientSecretsFile[client_secrets.json]
-            AuthTokenCache[token.pickle]
-            DownloadedVideos[downloads/ - Raw Videos]
-            OutputVideos[output/ - Processed Videos]
+        subgraph "Security"
+            GoogleOAuth[Google OAuth 2.0]
         end
 
         subgraph "External Services"
             YouTubeAPI[YouTube Data API v3]
-            GoogleOAuth[Google OAuth 2.0]
+            YTDLP[yt-dlp - Video Downloader]
         end
 
-        subgraph "Security"
-            style Security fill:#1E40AF,color:#BFDBFE
-            OAuthFlow[OAuth 2.0 Authorization Flow]
-            APIAccessControl[YouTube API Access Control]
-        end
+        User[End User]
 
-        User --> CLI: "Interacts via terminal"
-        CLI --> MainScript: "Interactive mode"
-        CLI --> BatchScript: "Batch processing"
+        User -- Interacts via CLI/Streamlit --> ClipstreamApp
+        ClipstreamApp --> MainCLI
+        ClipstreamApp --> BatchProcessor
 
-        MainScript --> LocalFS: "Reads/Writes files"
-        BatchScript --> LocalFS: "Reads/Writes files"
+        MainCLI -- Triggers video processing --> VideoEditor
+        BatchProcessor -- Triggers video processing --> VideoEditor
 
-        EditorMod --> MoviePyLib: "Uses for video editing"
-        YTDLPLib --> YouTubeAPI: "Downloads videos from"
-        YouTubeOpsMod --> GoogleAPILib: "Uses for API calls"
+        VideoEditor -- Reads raw video --> LocalDownloads
+        VideoEditor -- Writes processed video --> LocalOutput
+        VideoEditor -- Reads intro media --> IntroMedia
 
-        AuthMod --> GoogleOAuth: "Initiates authentication"
-        GoogleOAuth --> User: "Browser for consent"
-        User --> GoogleOAuth: "Grants access"
-        GoogleOAuth --> AuthMod: "Returns auth token"
-        AuthMod --> ClientSecretsFile: "Reads credentials"
-        AuthMod --> AuthTokenCache: "Stores/Retrieves token"
+        MainCLI -- Calls YouTube functions --> YouTubeOps
+        BatchProcessor -- Calls YouTube functions --> YouTubeOps
 
-        YouTubeOpsMod --> YouTubeAPI: "Makes API requests"
-        YouTubeAPI --> GoogleOAuth: "Validates API token"
+        YouTubeOps -- Authenticates via --> AuthModule
+        AuthModule -- Reads credentials --> ClientSecrets
+        AuthModule -- Stores/Reads token --> OAuthToken
+        AuthModule -- Requests access from --> GoogleOAuth
+        GoogleOAuth -- Grants API access --> AuthModule
 
-        YTDLPLib --> DownloadedVideos: "Saves raw videos to"
+        YouTubeOps -- Makes API requests --> YouTubeAPI
+        YouTubeAPI -- Returns API responses --> YouTubeOps
 
-        EditorMod --> IntroMedia: "Reads intro media"
-        EditorMod --> DownloadedVideos: "Reads raw video"
-        EditorMod --> OutputVideos: "Writes processed video"
+        BatchProcessor -- Invokes --> YTDLP
+        YTDLP -- Downloads videos from --> YouTubeAPI
+        YTDLP -- Saves downloaded video to --> LocalDownloads
 
-        YouTubeOpsMod --> OutputVideos: "Reads processed video"
-        YouTubeOpsMod --> YouTubeAPI: "Uploads & manages videos"
-
-        OAuthFlow --> GoogleOAuth: "Manages identity"
-        APIAccessControl --> YouTubeAPI: "Enforces permissions"
-
-        AuthMod -.-> OAuthFlow: "Utilizes"
-        YouTubeOpsMod -.-> APIAccessControl: "Requires"
+        ClipstreamApp -- Manages local storage --> StorageMgmt
+        StorageMgmt -- Monitors/Cleans --> LocalDownloads
+        StorageMgmt -- Monitors/Cleans --> LocalOutput
     end
 
     FOOTER[🏗️ Created with Architect AI Pro | BlueFalconInk LLC]
+
+    style "Application" fill:#1E3A5F,color:#BFDBFE
+    style "Data" fill:#0F172A,color:#BFDBFE
+    style "Security" fill:#1E40AF,color:#BFDBFE
     style FOOTER fill:#1E40AF,color:#BFDBFE,stroke:#3B82F6
