@@ -9,7 +9,7 @@ description = "Automate adding intro videos to YouTube content"
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
-    {name = "Blue Falcon RC & Media"}
+    {name = "BlueFalconInk LLC"}
 ]
 keywords = ["youtube", "video", "automation", "intro", "moviepy"]
 dependencies = [
