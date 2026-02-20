@@ -164,7 +164,7 @@ Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for gui
 
 ## Author
 
-Created by **Blue Falcon RC & Media** for automating YouTube content workflows.
+Created by **BlueFalconInk LLC** for automating YouTube content workflows.
 
 ---
 
