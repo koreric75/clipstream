@@ -73,7 +73,7 @@ graph TD
         StorageMgmt -- Monitors/Cleans --> LocalOutput
     end
 
-    FOOTER[🏗️ Created with Architect AI Pro | BlueFalconInk LLC]
+    FOOTER[🏗️ Created with Architect AI Pro - BlueFalconInk LLC]
 
     style "Application" fill:#1E3A5F,color:#BFDBFE
     style "Data" fill:#0F172A,color:#BFDBFE
