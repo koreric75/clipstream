@@ -2,46 +2,47 @@
 %% https://architect-ai-pro-mobile-edition-484078543321.us-west1.run.app/
 graph TD
     subgraph "BlueFalconInk LLC - Clipstream Architecture"
-        User[External User]
-
         subgraph "Security"
-            LB[Cloud Load Balancer]
-            CA[Cloud Armor]
+            Internet[🌐 Internet] --> CloudArmor[🛡️ Cloud Armor]
+            CloudArmor --> LoadBalancer[🚦 Cloud Load Balancer]
         end
 
         subgraph "Application Layer"
-            StreamlitApp[Streamlit Web App · Cloud Run]
-            ClipstreamService[Clipstream Processing Service · Cloud Run]
+            style Application fill:#1E3A5F,color:#BFDBFE
+            LoadBalancer --> CloudRunService[☁️ Cloud Run Service · Clipstream App]
+            CloudScheduler[⏰ Cloud Scheduler] -->|Triggers batch| CloudRunJob[☁️ Cloud Run Job · Clipstream Batch]
+
+            CloudRunService -->|Video Processing & Uploads| ClipstreamCore[Python App · yt_automation]
+            CloudRunJob -->|Batch Processing & Uploads| ClipstreamCore
+
+            ClipstreamCore -->|Accesses secrets| SecretManager[🔑 Secret Manager]
+            ClipstreamCore -->|Auth flow| GoogleOAuth[🔐 Google OAuth 2.0]
+            ClipstreamCore -->|API Calls| YouTubeAPI[▶️ YouTube Data API v3]
+            ClipstreamCore -->|Read/Write media & tokens| MediaBucket[🗄️ Cloud Storage · Media Bucket]
+            CloudRunService -->|Serves UI optional| StreamlitUI[Streamlit Web UI]
         end
 
         subgraph "Data Layer"
-            GCS_Intro[Cloud Storage · Intro Videos]
-            GCS_Temp[Cloud Storage · Temp Videos]
-            SM_Creds[Secret Manager · OAuth Credentials]
+            style Data fill:#0F172A,color:#BFDBFE
+            SecretManager
+            MediaBucket
         end
 
         subgraph "External Services"
-            YouTubeAPI[YouTube Data API v3]
-            GoogleOAuth[Google OAuth 2.0]
+            GoogleOAuth
+            YouTubeAPI
         end
 
-        User -->|HTTPS Request| LB
-        LB -->|Filter Traffic| CA
-        CA -->|HTTPS Request| StreamlitApp
-        StreamlitApp -->|Initiate Video Process| ClipstreamService
-        ClipstreamService -->|Retrieve client_secrets.json & token.pickle| SM_Creds
-        ClipstreamService -->|Read intro.mp4/jpg| GCS_Intro
-        ClipstreamService -->|Download/Upload Videos| YouTubeAPI
-        ClipstreamService -->|OAuth Flow for User| GoogleOAuth
-        YouTubeAPI -->|Auth Token Exchange| GoogleOAuth
-        GoogleOAuth -->|Store/Retrieve User Token| SM_Creds
-        ClipstreamService -->|Store downloaded/processed videos| GCS_Temp
-        ClipstreamService -->|Read downloaded videos| GCS_Temp
+        Internet -->|User Access CLI/Web| CloudArmor
+        UserCLI[🧑‍💻 User - CLI] -->|Executes scripts locally| ClipstreamCore
+        UserWeb[🧑‍💻 User - Web] -->|Interacts with| StreamlitUI
 
-        style Security fill:#1E40AF,color:#BFDBFE
-        style Application fill:#1E3A5F,color:#BFDBFE
-        style Data fill:#0F172A,color:#BFDBFE
+        MediaBucket -->|Stores intro.mp4, intro.jpg| IntroMedia[Intro Videos/Thumbnails]
+        MediaBucket -->|Stores downloaded videos| DownloadedVideos[Downloaded YouTube Videos]
+        MediaBucket -->|Stores processed videos| ProcessedVideos[Processed Output Videos]
+        MediaBucket -->|Stores cached token| AuthToken[token.pickle]
     end
 
     FOOTER[🏗️ Created with Architect AI Pro · BlueFalconInk LLC]
+    style Security fill:#1E40AF,color:#BFDBFE
     style FOOTER fill:#1E40AF,color:#BFDBFE,stroke:#3B82F6
